@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     getGeolocation(function(coords) {
-        console.log(coords);
+        // console.log(coords);
         drawLocation(coords.latitude, coords.longitude)
     }, function(error) {
         console.log(' ERR:', error)
@@ -33,10 +33,10 @@ function getGeolocation(fnsuccess, fnerror) {
 }
 
 
-
+var map;
 
 function drawLocation(currentLatitude, currentLongitude) {
-    var map = new maptalks.Map('map', {
+    map = new maptalks.Map('map', {
         center: [currentLongitude, currentLatitude],
         zoom: 15,
         baseLayer: new maptalks.TileLayer('base', {
@@ -52,17 +52,14 @@ function drawLocation(currentLatitude, currentLongitude) {
 //end: locates to current location of user
 
 //locates a location using coordinates
+
 function replaceMap() {
-    map.remove();
-    var map1 = new maptalks.Map('map1', {
-        center: [83.9906, 28.2330],
-        zoom: 15,
-        baseLayer: new maptalks.TileLayer('base', {
-            urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c', 'd'],
-            attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
-        })
-    });
+
+    map.center = [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)];
+
+    changeView();
+
+    console.log(map);
 
     function changeView() {
         map.animateTo({
@@ -84,4 +81,5 @@ function replaceMap() {
             });
         }, 7000);
     }
+
 }
