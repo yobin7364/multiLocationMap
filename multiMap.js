@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     getGeolocation(function(coords) {
-        // console.log(coords);
+        console.log(coords);
         drawLocation(coords.latitude, coords.longitude)
     }, function(error) {
         console.log(' ERR:', error)
@@ -46,6 +46,11 @@ function drawLocation(currentLatitude, currentLongitude) {
         })
     });
 
+    // same point without altitude
+    var point = new maptalks.Marker(
+        [currentLongitude, currentLatitude]
+    );
+    new maptalks.VectorLayer('vector', point).addTo(map);
 
 }
 
