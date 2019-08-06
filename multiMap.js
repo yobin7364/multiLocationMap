@@ -3,7 +3,8 @@
 $(document).ready(function() {
     getGeolocation(function(coords) {
         console.log(coords);
-        drawLocation(coords.latitude, coords.longitude)
+        drawLocation(coords.latitude, coords.longitude);
+
     }, function(error) {
         console.log(' ERR:', error)
     });
@@ -34,6 +35,8 @@ function getGeolocation(fnsuccess, fnerror) {
 
 
 var map;
+var markerLayer;
+var markerLayer1;
 
 function drawLocation(currentLatitude, currentLongitude) {
     map = new maptalks.Map('map', {
@@ -50,7 +53,7 @@ function drawLocation(currentLatitude, currentLongitude) {
     var point = new maptalks.Marker(
         [currentLongitude, currentLatitude]
     );
-    new maptalks.VectorLayer('vector', point).addTo(map);
+    markerLayer = new maptalks.VectorLayer('vector', point).addTo(map);
 
 }
 
@@ -59,32 +62,49 @@ function drawLocation(currentLatitude, currentLongitude) {
 //locates a location using coordinates
 
 function replaceMap() {
+    //check is coordinates values are empty or not
+    if ((document.getElementById("longi").value) & (document.getElementById("lat").value)) {
 
-    map.center = [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)];
+        map.center = [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)];
 
-    changeView();
+        // same point without altitude
+        var point1 = new maptalks.Marker(
+            [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)]
+        );
+        map.removeLayer(markerLayer);
+        if (markerLayer1) {
+            map.removeLayer(markerLayer1);
+        }
+        // var d = new Date();
+        // var t = d.getTime();
+        // new maptalks.VectorLayer(t, point1).addTo(map);
+        markerLayer1 = new maptalks.VectorLayer('vector', point1).addTo(map);
 
-    console.log(map);
+        changeView();
 
-    function changeView() {
-        map.animateTo({
-            center: [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)],
-            zoom: 13,
-            pitch: 0,
-            bearing: 20
-        }, {
-            duration: 5000
-        });
-        setTimeout(function() {
+        console.log(map);
+
+        function changeView() {
             map.animateTo({
                 center: [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)],
-                zoom: 18,
-                pitch: 65,
-                bearing: 360
+                zoom: 13,
+                pitch: 0,
+                bearing: 20
             }, {
-                duration: 7000
+                duration: 5000
             });
-        }, 7000);
+            setTimeout(function() {
+                map.animateTo({
+                    center: [parseFloat((document.getElementById("longi")).value), parseFloat((document.getElementById("lat")).value)],
+                    zoom: 18,
+                    pitch: 0,
+                    bearing: 0
+                }, {
+                    duration: 7000
+                });
+            }, 7000);
+        }
+    } else {
+        alert("Please enter the Coordinate values");
     }
-
 }
